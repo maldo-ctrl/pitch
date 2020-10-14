@@ -8,6 +8,9 @@ import { PlayersService } from "src/app/services/players.service";
   styleUrls: ["./pitch.component.css"],
 })
 export class PitchComponent implements OnInit {
+  showCoords: boolean = false;
+  draggingHome: boolean = false;
+  draggingAway: boolean = false;
   net: any;
   players: any;
   away: string;
@@ -38,13 +41,13 @@ export class PitchComponent implements OnInit {
     lamf: [9, 2],
     rwf: [11, 9],
     lwf: [11, 1],
-    rcb3: [0, 0],
     cb: [3, 5],
-    lcb3: [0, 0],
     rwb: [5, 9],
     lwb: [5, 1],
+    /*     lcb3: [0, 0],
+    rcb3: [0, 0],
     rb5: [0, 0],
-    lb5: [0, 0],
+    lb5: [0, 0], */
   };
 
   constructor(private playersService: PlayersService) {
@@ -56,19 +59,32 @@ export class PitchComponent implements OnInit {
   }
 
   drag(event, coords, lineup): void {
+    if (lineup == "homeLineup") {
+      this.draggingHome = true;
+    } else {
+      this.draggingAway = true;
+    }
     event.dataTransfer.setData("initialCoords", coords);
     event.dataTransfer.setData("initialLineup", lineup);
     this.initialLineup = lineup;
   }
-  allowDrop(event, coords, lineup): void {
-    if (this.getPosition(coords) && this.initialLineup == lineup)
-      event.preventDefault();
+  dragEnd(): void {
+    this.draggingHome = false;
+    this.draggingAway = false;
   }
+  allowDrop(event, coords, lineup): void {
+    if (this.getPosition(coords) && this.initialLineup == lineup) {
+      event.preventDefault();
+    }
+  }
+
   drop(event, coords, lineup): void {
     var initialCoords = event.dataTransfer
       .getData("initialCoords")
       .split(",")
       .map((el) => Number(el));
+    this.draggingHome = false;
+    this.draggingAway = false;
     if (this.initialLineup == lineup)
       return this.swap(initialCoords, coords, lineup);
   }
@@ -146,12 +162,11 @@ export class PitchComponent implements OnInit {
       if (toBench) {
         return;
       } else {
+        if (!destinationPlayer) return;
         originPlayer.position = destinationPos;
         originPlayer.bench = false;
-        if (destinationPlayer) {
-          destinationPlayer.position = null;
-          destinationPlayer.bench = true;
-        }
+        destinationPlayer.position = null;
+        destinationPlayer.bench = true;
       }
     } else {
       if (toBench) {

@@ -21,7 +21,7 @@
               let indexOfelement = index
             "
           >
-            <td class="cellBench">
+            <td class="cellBench" [ngClass]="{ dragable: draggingHome }">
               <div
                 (drop)="drop($event, [-1, player.player_id], 'homeLineup')"
                 (dragover)="
@@ -46,21 +46,26 @@
       <table class="playerNet">
         <tbody>
           <tr *ngFor="let row of net[0]">
-            <td *ngFor="let col of net[1]" class="cell">
-              <!-- ({{col}},{{row}}) -->
-              <div
-                class="cellEffect"
-                (drop)="drop($event, [col, row], 'homeLineup')"
-                (dragover)="allowDrop($event, [col, row], 'homeLineup')"
-              >
-                <app-player
-                  *ngIf="checkPosition([col, row], 'homeLineup')"
-                  [playerName]="checkPosition([col, row], 'homeLineup')"
-                  [color]="'blue'"
-                  draggable="true"
-                  (dragstart)="drag($event, [col, row], 'homeLineup')"
-                ></app-player>
-              </div>
+            <td
+              *ngFor="let col of net[1]"
+              class="cell"
+              [ngClass]="{ dragable: draggingHome && getPosition([col, row]) }"
+              (drop)="drop($event, [col, row], 'homeLineup')"
+              (dragover)="allowDrop($event, [col, row], 'homeLineup')"
+            >
+              <app-player
+                *ngIf="checkPosition([col, row], 'homeLineup')"
+                [playerName]="checkPosition([col, row], 'homeLineup')"
+                [color]="'blue'"
+                draggable="true"
+                (dragstart)="drag($event, [col, row], 'homeLineup')"
+                (dragend)="dragEnd()"
+              ></app-player>
+
+              <p *ngIf="showCoords">({{ col }},{{ row }})</p>
+              <p *ngIf="draggingHome" class="info">
+                {{ getPosition([col, row]) }}
+              </p>
             </td>
           </tr>
         </tbody>
@@ -68,21 +73,26 @@
       <table class="playerNet2">
         <tbody>
           <tr *ngFor="let row of net[0].slice().reverse()">
-            <td *ngFor="let col of net[1].slice().reverse()" class="cell">
-              <!-- ({{col}},{{row}}) -->
-              <div
-                class="cellEffect"
-                (drop)="drop($event, [col, row], 'awayLineup')"
-                (dragover)="allowDrop($event, [col, row], 'awayLineup')"
-              >
-                <app-player
-                  *ngIf="checkPosition([col, row], 'awayLineup')"
-                  [playerName]="checkPosition([col, row], 'awayLineup')"
-                  [color]="'red'"
-                  draggable="true"
-                  (dragstart)="drag($event, [col, row], 'awayLineup')"
-                ></app-player>
-              </div>
+            <td
+              *ngFor="let col of net[1].slice().reverse()"
+              class="cell"
+              [ngClass]="{ dragable: draggingAway && getPosition([col, row]) }"
+              (drop)="drop($event, [col, row], 'awayLineup')"
+              (dragover)="allowDrop($event, [col, row], 'awayLineup')"
+            >
+              <app-player
+                *ngIf="checkPosition([col, row], 'awayLineup')"
+                [playerName]="checkPosition([col, row], 'awayLineup')"
+                [color]="'red'"
+                draggable="true"
+                (dragstart)="drag($event, [col, row], 'awayLineup')"
+                (dragend)="dragEnd()"
+              ></app-player>
+
+              <p *ngIf="showCoords">({{ col }},{{ row }})</p>
+              <p *ngIf="draggingAway" class="info">
+                {{ getPosition([col, row]) }}
+              </p>
             </td>
           </tr>
         </tbody>
@@ -99,7 +109,7 @@
               let indexOfelement = index
             "
           >
-            <td class="cellBench">
+            <td class="cellBench" [ngClass]="{ dragable: draggingAway }">
               <div
                 (drop)="drop($event, [-1, player.player_id], 'awayLineup')"
                 (dragover)="
