@@ -3,7 +3,26 @@
 <div class="container">
   <div class="row">
     <div class="col-1">
-      One of three columns
+      {{ home }} Bench
+      <table class="bench">
+        <tbody>
+          <tr *ngFor="let player of homeBench">
+            <td class="cellBench">
+              <div
+                (drop)="drop($event, [col, row], 'homeLineup')"
+                (dragover)="allowDrop($event, [col, row], 'homeLineup')"
+              >
+                <app-player
+                  [playerName]="player.player_name"
+                  [color]="'blue'"
+                  draggable="true"
+                  (dragstart)="drag($event, [col, row], 'homeLineup')"
+                ></app-player>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div class="col-10 pitch">
       <table class="playerNet">
@@ -11,11 +30,19 @@
           <tr *ngFor="let row of net[0]">
             <td *ngFor="let col of net[1]" class="cell">
               <!-- ({{col}},{{row}}) -->
-              <app-player
-                *ngIf="checkPosition([col,row],'homeLineup')"
-                [playerName]="checkPosition([col,row],'homeLineup')"
-                [color]="'blue'"
-              ></app-player>
+              <div
+                class="cellEffect"
+                (drop)="drop($event, [col, row], 'homeLineup')"
+                (dragover)="allowDrop($event, [col, row], 'homeLineup')"
+              >
+                <app-player
+                  *ngIf="checkPosition([col, row], 'homeLineup')"
+                  [playerName]="checkPosition([col, row], 'homeLineup')"
+                  [color]="'blue'"
+                  draggable="true"
+                  (dragstart)="drag($event, [col, row], 'homeLineup', getPlayerIdFromCoords([col, row],'homeLineup'))"
+                ></app-player>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -25,18 +52,46 @@
           <tr *ngFor="let row of net[0].slice().reverse()">
             <td *ngFor="let col of net[1].slice().reverse()" class="cell">
               <!-- ({{col}},{{row}}) -->
-              <app-player
-                *ngIf="checkPosition([col,row],'awayLineup')"
-                [playerName]="checkPosition([col,row],'awayLineup')"
-                [color]="'red'"
-              ></app-player>
+              <div
+                class="cellEffect"
+                (drop)="drop($event, [col, row], 'awayLineup')"
+                (dragover)="allowDrop($event, [col, row], 'awayLineup')"
+              >
+                <app-player
+                  *ngIf="checkPosition([col, row], 'awayLineup')"
+                  [playerName]="checkPosition([col, row], 'awayLineup')"
+                  [color]="'red'"
+                  draggable="true"
+                  (dragstart)="drag($event, [col, row], 'awayLineup')"
+                ></app-player>
+              </div>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
     <div class="col-1">
-      One of three columns
+      {{ away }} Bench
+
+      <table class="bench">
+        <tbody>
+          <tr *ngFor="let player of awayBench">
+            <td>
+              <div
+                (drop)="drop($event, [col, row], 'awayLineup')"
+                (dragover)="allowDrop($event, [col, row], 'awayLineup')"
+              >
+                <app-player
+                  [playerName]="player.player_name"
+                  [color]="'red'"
+                  draggable="true"
+                  (dragstart)="drag($event, [col, row], 'awayLineup')"
+                ></app-player>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

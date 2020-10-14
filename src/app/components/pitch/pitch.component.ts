@@ -12,6 +12,9 @@ export class PitchComponent implements OnInit {
   players: any;
   awayLineup: any = [];
   homeLineup: any = [];
+  initialLineup: string = "";
+  awayBench: any = [];
+  homeBench: any = [];
   positionMapping = {
     gk: [0, 5],
     rb: [4, 9],
@@ -52,13 +55,35 @@ export class PitchComponent implements OnInit {
     this.retrievePlayers();
   }
 
+  drag(event, coords, lineup, test): void {
+    debugger
+    event.dataTransfer.setData("initialCoords", coords);
+    event.dataTransfer.setData("initialLineup", lineup);
+    this.initialLineup = lineup;
+  }
+  allowDrop(event, coords, lineup): void {
+    if (this.getPosition(coords) && this.initialLineup == lineup)
+      event.preventDefault();
+  }
+  drop(event, coords, lineup): void {
+    var initialCoords = event.dataTransfer
+      .getData("initialCoords")
+      .split(",")
+      .map((el) => Number(el));
+    if (this.initialLineup == lineup)
+      return this.swap(initialCoords, coords, lineup);
+  }
+
   retrievePlayers(): void {
     this.playersService.getAll().subscribe(
       (data) => {
         this.players = data;
-        this.awayLineup = data.away_lineup;
-        this.homeLineup = data.home_lineup;
-        console.log(this.awayLineup);
+        this.away = data.away;
+        this.home = data.home;
+        this.awayLineup = data.away_lineup.filter((el) => !el.bench);
+        this.awayBench = data.away_lineup.filter((el) => el.bench);
+        this.homeLineup = data.home_lineup.filter((el) => !el.bench);
+        this.homeBench = data.home_lineup.filter((el) => el.bench);
       },
       (error) => {
         console.log(error);
@@ -67,8 +92,6 @@ export class PitchComponent implements OnInit {
   }
 
   checkPosition(coords, lineup): string {
-    // if (coords[0] === 1 && coords[1] === 0) return "Marcelo";
-
     var positionToCheck = Object.keys(this.positionMapping).find((key) => {
       if (typeof this.positionMapping[key] === "object") {
         if (
@@ -79,18 +102,46 @@ export class PitchComponent implements OnInit {
       }
     });
 
-    /* if(positionToCheck) debugger */
     var player = this[lineup].find((player) => {
       if (positionToCheck && player.position === positionToCheck) return true;
     });
 
-    var test = this[lineup].filter((player) => {
-      if (!player.bench && !this.positionMapping[player.position]) return true;
-    });
-
-/*     console.log(test);
+    /*     console.log(test);
 
     return positionToCheck; */
     return player ? player.player_name : "";
+  }
+
+  getPlayerIdFromCoords(coords, lineup): number {
+    var pos = this.getPosition(coords);
+    var player = this[lineup].find((p) => p.position == pos);
+    if (player) return Number(player.player_id);
+    else return -1;
+  }
+
+  swap(origin, destination, lineup): void {
+    console.log(origin, destination);
+    var originPos = this.getPosition(origin);
+    var destinationPos = this.getPosition(destination);
+    var originPlayer = this[lineup].find((p) => p.position == originPos);
+    var destinationPlayer = this[lineup].find(
+      (p) => p.position == destinationPos
+    );
+    originPlayer.position = destinationPos;
+    if (destinationPlayer) {
+      destinationPlayer.position = originPos;
+    }
+  }
+
+  getPosition(coords): any {
+    return Object.keys(this.positionMapping).find((key) => {
+      if (typeof this.positionMapping[key] === "object") {
+        if (
+          this.positionMapping[key][0] == coords[0] &&
+          this.positionMapping[key][1] == coords[1]
+        )
+          return true;
+      }
+    });
   }
 }
