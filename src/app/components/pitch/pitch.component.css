@@ -5,7 +5,7 @@
   background-size: 100% 100%;
   /* background-size: cover; */
   padding-top: 53.4%; /* Pitch aspect Ratio */
-  position: relative;
+  /* position: relative; */
 }
 
 .playerNet {
@@ -26,4 +26,6 @@
 
 .cell {
   font-size: 10px;
+  text-align: center;
+  position: relative;
 }

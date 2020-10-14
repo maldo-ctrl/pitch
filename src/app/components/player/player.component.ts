@@ -7,6 +7,7 @@ import { Component, OnInit, Input } from "@angular/core";
 })
 export class PlayerComponent implements OnInit {
   @Input() playerName: string;
+  @Input() color: string;
   constructor() {}
 
   ngOnInit(): void {}

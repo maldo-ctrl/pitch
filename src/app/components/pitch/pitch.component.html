@@ -10,10 +10,11 @@
         <tbody>
           <tr *ngFor="let row of net[0]">
             <td *ngFor="let col of net[1]" class="cell">
-              ({{col}},{{row}})
+              <!-- ({{col}},{{row}}) -->
               <app-player
                 *ngIf="checkPosition([col,row],'homeLineup')"
-                [playerName]="'Marcelo'"
+                [playerName]="checkPosition([col,row],'homeLineup')"
+                [color]="'blue'"
               ></app-player>
             </td>
           </tr>
@@ -23,10 +24,11 @@
         <tbody>
           <tr *ngFor="let row of net[0].slice().reverse()">
             <td *ngFor="let col of net[1].slice().reverse()" class="cell">
-              ({{col}},{{row}})
+              <!-- ({{col}},{{row}}) -->
               <app-player
                 *ngIf="checkPosition([col,row],'awayLineup')"
-                [playerName]="'Marcelo'"
+                [playerName]="checkPosition([col,row],'awayLineup')"
+                [color]="'red'"
               ></app-player>
             </td>
           </tr>
@@ -35,10 +37,6 @@
     </div>
     <div class="col-1">
       One of three columns
-      <!-- <app-player
-        *ngIf="checkPosition({[2,2])"
-        [playerName]="'Marcelo'"
-      ></app-player> -->
     </div>
   </div>
 </div>
