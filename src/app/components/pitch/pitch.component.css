@@ -1,0 +1,29 @@
+.pitch {
+  background-image: url("src/assets/img/pitch.png");
+  /* background-color: #cccccc; */
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  /* background-size: cover; */
+  padding-top: 53.4%; /* Pitch aspect Ratio */
+  position: relative;
+}
+
+.playerNet {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+}
+
+.playerNet2 {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+}
+
+.cell {
+  font-size: 10px;
+}

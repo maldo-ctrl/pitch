@@ -1,0 +1,44 @@
+<!-- <img src="assets/img/pitch.png" /> -->
+
+<div class="container">
+  <div class="row">
+    <div class="col-1">
+      One of three columns
+    </div>
+    <div class="col-10 pitch">
+      <table class="playerNet">
+        <tbody>
+          <tr *ngFor="let row of net[0]">
+            <td *ngFor="let col of net[1]" class="cell">
+              ({{col}},{{row}})
+              <app-player
+                *ngIf="checkPosition([col,row],'homeLineup')"
+                [playerName]="'Marcelo'"
+              ></app-player>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="playerNet2">
+        <tbody>
+          <tr *ngFor="let row of net[0].slice().reverse()">
+            <td *ngFor="let col of net[1].slice().reverse()" class="cell">
+              ({{col}},{{row}})
+              <app-player
+                *ngIf="checkPosition([col,row],'awayLineup')"
+                [playerName]="'Marcelo'"
+              ></app-player>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-1">
+      One of three columns
+      <!-- <app-player
+        *ngIf="checkPosition({[2,2])"
+        [playerName]="'Marcelo'"
+      ></app-player> -->
+    </div>
+  </div>
+</div>
