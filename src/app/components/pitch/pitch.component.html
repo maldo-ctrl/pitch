@@ -1,0 +1,134 @@
+<!-- <img src="assets/img/pitch.png" /> -->
+
+<div class="container">
+  <div class="row" style="padding-bottom: 24px">
+    <div class="col-6">
+      <h3>{{ home }}</h3>
+    </div>
+    <div class="col-6">
+      <h3>{{ away }}</h3>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-1">
+      <h5>Bench</h5>
+      <table class="bench">
+        <tbody>
+          <tr
+            *ngFor="
+              let player of getBench('homeLineup');
+              let indexOfelement = index
+            "
+          >
+            <td class="cellBench" [ngClass]="{ dragable: draggingHome }">
+              <div
+                (drop)="drop($event, [-1, player.player_id], 'homeLineup')"
+                (dragover)="
+                  allowDrop($event, [-1, player.player_id], 'homeLineup')
+                "
+              >
+                <app-player
+                  [playerName]="player.player_name"
+                  [color]="'blue'"
+                  draggable="true"
+                  (dragstart)="
+                    drag($event, [-1, player.player_id], 'homeLineup')
+                  "
+                ></app-player>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-10 pitch">
+      <table class="playerNet">
+        <tbody>
+          <tr *ngFor="let row of net[0]">
+            <td
+              *ngFor="let col of net[1]"
+              class="cell"
+              [ngClass]="{ dragable: draggingHome && getPosition([col, row]) }"
+              (drop)="drop($event, [col, row], 'homeLineup')"
+              (dragover)="allowDrop($event, [col, row], 'homeLineup')"
+            >
+              <app-player
+                *ngIf="checkPosition([col, row], 'homeLineup')"
+                [playerName]="checkPosition([col, row], 'homeLineup')"
+                [color]="'blue'"
+                draggable="true"
+                (dragstart)="drag($event, [col, row], 'homeLineup')"
+                (dragend)="dragEnd()"
+              ></app-player>
+
+              <p *ngIf="showCoords">({{ col }},{{ row }})</p>
+              <p *ngIf="draggingHome" class="info">
+                {{ getPosition([col, row]) }}
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="playerNet2">
+        <tbody>
+          <tr *ngFor="let row of net[0].slice().reverse()">
+            <td
+              *ngFor="let col of net[1].slice().reverse()"
+              class="cell"
+              [ngClass]="{ dragable: draggingAway && getPosition([col, row]) }"
+              (drop)="drop($event, [col, row], 'awayLineup')"
+              (dragover)="allowDrop($event, [col, row], 'awayLineup')"
+            >
+              <app-player
+                *ngIf="checkPosition([col, row], 'awayLineup')"
+                [playerName]="checkPosition([col, row], 'awayLineup')"
+                [color]="'red'"
+                draggable="true"
+                (dragstart)="drag($event, [col, row], 'awayLineup')"
+                (dragend)="dragEnd()"
+              ></app-player>
+
+              <p *ngIf="showCoords">({{ col }},{{ row }})</p>
+              <p *ngIf="draggingAway" class="info">
+                {{ getPosition([col, row]) }}
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-1">
+      <h5>Bench</h5>
+
+      <table class="bench">
+        <tbody>
+          <tr
+            *ngFor="
+              let player of getBench('awayLineup');
+              let indexOfelement = index
+            "
+          >
+            <td class="cellBench" [ngClass]="{ dragable: draggingAway }">
+              <div
+                (drop)="drop($event, [-1, player.player_id], 'awayLineup')"
+                (dragover)="
+                  allowDrop($event, [-1, player.player_id], 'awayLineup')
+                "
+              >
+                <app-player
+                  [playerName]="player.player_name"
+                  [color]="'red'"
+                  draggable="true"
+                  (dragstart)="
+                    drag($event, [-1, player.player_id], 'awayLineup')
+                  "
+                ></app-player>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
