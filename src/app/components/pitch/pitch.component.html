@@ -1,22 +1,40 @@
 <!-- <img src="assets/img/pitch.png" /> -->
 
 <div class="container">
+  <div class="row" style="padding-bottom: 24px">
+    <div class="col-6">
+      <h3>{{ home }}</h3>
+    </div>
+    <div class="col-6">
+      <h3>{{ away }}</h3>
+    </div>
+  </div>
+
   <div class="row">
     <div class="col-1">
-      {{ home }} Bench
+      <h5>Bench</h5>
       <table class="bench">
         <tbody>
-          <tr *ngFor="let player of homeBench">
+          <tr
+            *ngFor="
+              let player of getBench('homeLineup');
+              let indexOfelement = index
+            "
+          >
             <td class="cellBench">
               <div
-                (drop)="drop($event, [col, row], 'homeLineup')"
-                (dragover)="allowDrop($event, [col, row], 'homeLineup')"
+                (drop)="drop($event, [-1, player.player_id], 'homeLineup')"
+                (dragover)="
+                  allowDrop($event, [-1, player.player_id], 'homeLineup')
+                "
               >
                 <app-player
                   [playerName]="player.player_name"
                   [color]="'blue'"
                   draggable="true"
-                  (dragstart)="drag($event, [col, row], 'homeLineup')"
+                  (dragstart)="
+                    drag($event, [-1, player.player_id], 'homeLineup')
+                  "
                 ></app-player>
               </div>
             </td>
@@ -40,7 +58,7 @@
                   [playerName]="checkPosition([col, row], 'homeLineup')"
                   [color]="'blue'"
                   draggable="true"
-                  (dragstart)="drag($event, [col, row], 'homeLineup', getPlayerIdFromCoords([col, row],'homeLineup'))"
+                  (dragstart)="drag($event, [col, row], 'homeLineup')"
                 ></app-player>
               </div>
             </td>
@@ -71,21 +89,30 @@
       </table>
     </div>
     <div class="col-1">
-      {{ away }} Bench
+      <h5>Bench</h5>
 
       <table class="bench">
         <tbody>
-          <tr *ngFor="let player of awayBench">
-            <td>
+          <tr
+            *ngFor="
+              let player of getBench('awayLineup');
+              let indexOfelement = index
+            "
+          >
+            <td class="cellBench">
               <div
-                (drop)="drop($event, [col, row], 'awayLineup')"
-                (dragover)="allowDrop($event, [col, row], 'awayLineup')"
+                (drop)="drop($event, [-1, player.player_id], 'awayLineup')"
+                (dragover)="
+                  allowDrop($event, [-1, player.player_id], 'awayLineup')
+                "
               >
                 <app-player
                   [playerName]="player.player_name"
                   [color]="'red'"
                   draggable="true"
-                  (dragstart)="drag($event, [col, row], 'awayLineup')"
+                  (dragstart)="
+                    drag($event, [-1, player.player_id], 'awayLineup')
+                  "
                 ></app-player>
               </div>
             </td>

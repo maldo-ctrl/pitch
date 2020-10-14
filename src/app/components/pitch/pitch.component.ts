@@ -10,11 +10,11 @@ import { PlayersService } from "src/app/services/players.service";
 export class PitchComponent implements OnInit {
   net: any;
   players: any;
+  away: string;
+  home: string;
   awayLineup: any = [];
   homeLineup: any = [];
   initialLineup: string = "";
-  awayBench: any = [];
-  homeBench: any = [];
   positionMapping = {
     gk: [0, 5],
     rb: [4, 9],
@@ -55,8 +55,7 @@ export class PitchComponent implements OnInit {
     this.retrievePlayers();
   }
 
-  drag(event, coords, lineup, test): void {
-    debugger
+  drag(event, coords, lineup): void {
     event.dataTransfer.setData("initialCoords", coords);
     event.dataTransfer.setData("initialLineup", lineup);
     this.initialLineup = lineup;
@@ -80,10 +79,8 @@ export class PitchComponent implements OnInit {
         this.players = data;
         this.away = data.away;
         this.home = data.home;
-        this.awayLineup = data.away_lineup.filter((el) => !el.bench);
-        this.awayBench = data.away_lineup.filter((el) => el.bench);
-        this.homeLineup = data.home_lineup.filter((el) => !el.bench);
-        this.homeBench = data.home_lineup.filter((el) => el.bench);
+        this.awayLineup = data.away_lineup;
+        this.homeLineup = data.home_lineup;
       },
       (error) => {
         console.log(error);
@@ -106,9 +103,6 @@ export class PitchComponent implements OnInit {
       if (positionToCheck && player.position === positionToCheck) return true;
     });
 
-    /*     console.log(test);
-
-    return positionToCheck; */
     return player ? player.player_name : "";
   }
 
@@ -120,28 +114,83 @@ export class PitchComponent implements OnInit {
   }
 
   swap(origin, destination, lineup): void {
-    console.log(origin, destination);
+    var currentLineup = this[lineup];
+
     var originPos = this.getPosition(origin);
     var destinationPos = this.getPosition(destination);
-    var originPlayer = this[lineup].find((p) => p.position == originPos);
-    var destinationPlayer = this[lineup].find(
-      (p) => p.position == destinationPos
-    );
-    originPlayer.position = destinationPos;
-    if (destinationPlayer) {
-      destinationPlayer.position = originPos;
+
+    var fromBench = originPos == "bench";
+    var toBench = destinationPos == "bench";
+
+    var originPlayer;
+
+    if (fromBench) {
+      originPlayer = currentLineup.find((p) => p.player_id == origin[1]);
+    } else {
+      originPlayer = currentLineup.find((p) => p.position == originPos);
+    }
+
+    var destinationPlayer;
+
+    if (toBench) {
+      destinationPlayer = currentLineup.find(
+        (p) => p.player_id == destination[1]
+      );
+    } else {
+      destinationPlayer = currentLineup.find(
+        (p) => p.position == destinationPos
+      );
+    }
+
+    if (fromBench) {
+      if (toBench) {
+        return;
+      } else {
+        originPlayer.position = destinationPos;
+        originPlayer.bench = false;
+        if (destinationPlayer) {
+          destinationPlayer.position = null;
+          destinationPlayer.bench = true;
+        }
+      }
+    } else {
+      if (toBench) {
+        originPlayer.position = null;
+        originPlayer.bench = true;
+        if (destinationPlayer) {
+          destinationPlayer.position = originPos;
+          destinationPlayer.bench = false;
+        }
+      } else {
+        originPlayer.position = destinationPos;
+        originPlayer.bench = false;
+        if (destinationPlayer) {
+          destinationPlayer.position = originPos;
+          destinationPlayer.bench = false;
+        }
+      }
     }
   }
 
+  getPlayers(lineup): any {
+    return this[lineup].filter((el) => !el.bench);
+  }
+
+  getBench(lineup): any {
+    return this[lineup].filter((el) => el.bench);
+  }
+
   getPosition(coords): any {
-    return Object.keys(this.positionMapping).find((key) => {
-      if (typeof this.positionMapping[key] === "object") {
-        if (
-          this.positionMapping[key][0] == coords[0] &&
-          this.positionMapping[key][1] == coords[1]
-        )
-          return true;
-      }
-    });
+    if (coords[0] == -1) return "bench";
+    else
+      return Object.keys(this.positionMapping).find((key) => {
+        if (typeof this.positionMapping[key] === "object") {
+          if (
+            this.positionMapping[key][0] == coords[0] &&
+            this.positionMapping[key][1] == coords[1]
+          )
+            return true;
+        }
+      });
   }
 }
