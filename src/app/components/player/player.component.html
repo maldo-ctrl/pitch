@@ -1,5 +1,6 @@
-
 <div class="playerName">
-  <div class="playerMarker" [ngStyle]="{'background-color':color}"></div>
-  {{ playerName }}
+  <div style="position: relative; display: flex; flex-direction: column;">
+    <div class="playerMarker" [ngStyle]="{ 'background-color': color }"></div>
+    <p>{{ playerName }}</p>
+  </div>
 </div>
