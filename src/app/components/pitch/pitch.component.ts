@@ -20,30 +20,30 @@ export class PitchComponent implements OnInit {
   initialLineup: string = "";
   positionMapping = {
     gk: [0, 5],
-    rb: [4, 9],
-    sw: [2, 5],
-    rcb: [2, 8],
-    lcb: [2, 2],
-    lb: [4, 1],
-    rw: [10, 9],
-    rcmf: [7, 8],
-    lcmf: [7, 2],
-    lw: [10, 1],
-    ss: [10, 5],
-    cf: [12, 5],
-    amf: [9, 5],
-    rcmf3: [4, 8],
-    dmf: [5, 5],
-    lcmf3: [4, 2],
-    rdmf: [5, 8],
-    ldmf: [5, 2],
-    ramf: [9, 8],
-    lamf: [9, 2],
-    rwf: [11, 9],
-    lwf: [11, 1],
-    cb: [3, 5],
-    rwb: [5, 9],
-    lwb: [5, 1],
+    rb: [7, 9],
+    sw: [5, 5],
+    rcb: [5, 8],
+    lcb: [5, 2],
+    lb: [7, 1],
+    rw: [13, 9],
+    rcmf: [10, 8],
+    lcmf: [10, 2],
+    lw: [13, 1],
+    ss: [13, 5],
+    cf: [15, 5],
+    amf: [12, 5],
+    rcmf3: [7, 8],
+    dmf: [8, 5],
+    lcmf3: [7, 2],
+    rdmf: [8, 8],
+    ldmf: [8, 2],
+    ramf: [12, 8],
+    lamf: [12, 2],
+    rwf: [14, 9],
+    lwf: [14, 1],
+    cb: [6, 5],
+    rwb: [8, 9],
+    lwb: [8, 1],
     /*     lcb3: [0, 0],
     rcb3: [0, 0],
     rb5: [0, 0],
@@ -51,7 +51,7 @@ export class PitchComponent implements OnInit {
   };
 
   constructor(private playersService: PlayersService) {
-    this.net = [[...Array(11).keys()], [...Array(13).keys()]];
+    this.net = [[...Array(11).keys()], [...Array(16).keys()]];
   }
 
   ngOnInit(): void {
